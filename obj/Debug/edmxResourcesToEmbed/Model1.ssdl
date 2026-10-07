@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище ShoeStore_BondarevModel" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Categories">
+    <Key>
+      <PropertyRef Name="Id_Категории" />
+    </Key>
+    <Property Name="Id_Категории" Type="int" Nullable="false" />
+    <Property Name="Наименование_Категории" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Manufacturers">
+    <Key>
+      <PropertyRef Name="Id_Производителя" />
+    </Key>
+    <Property Name="Id_Производителя" Type="int" Nullable="false" />
+    <Property Name="Наименование_Производителя" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="OrderItems">
+    <Key>
+      <PropertyRef Name="Номер_Заказа" />
+    </Key>
+    <Property Name="Номер_Заказа" Type="int" Nullable="false" />
+    <Property Name="Артикул" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="Количество" Type="int" />
+  </EntityType>
+  <EntityType Name="Orders">
+    <Key>
+      <PropertyRef Name="Номер_Заказа" />
+    </Key>
+    <Property Name="Номер_Заказа" Type="int" Nullable="false" />
+    <Property Name="IdUser" Type="int" />
+    <Property Name="IdStatus" Type="int" />
+    <Property Name="Дата_Заказа" Type="date" />
+    <Property Name="Дата_Доставки" Type="date" />
+    <Property Name="Адрес_Пункта_Выдачи" Type="int" />
+    <Property Name="Код_Для_Получения" Type="int" />
+  </EntityType>
+  <EntityType Name="PickupPoints">
+    <Key>
+      <PropertyRef Name="Id_Пункта" />
+    </Key>
+    <Property Name="Id_Пункта" Type="int" Nullable="false" />
+    <Property Name="Индекс" Type="nvarchar" MaxLength="10" />
+    <Property Name="Город" Type="nvarchar" MaxLength="50" />
+    <Property Name="Улица" Type="nvarchar" MaxLength="100" />
+    <Property Name="Дом" Type="nvarchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="Products">
+    <Key>
+      <PropertyRef Name="Артикул" />
+    </Key>
+    <Property Name="Артикул" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="Наименование_Товара" Type="nvarchar" MaxLength="255" />
+    <Property Name="Единица_Измерения" Type="nvarchar" MaxLength="20" />
+    <Property Name="Цена" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="Id_Поставщика" Type="int" />
+    <Property Name="Id_Производителя" Type="int" />
+    <Property Name="Id_Категории" Type="int" />
+    <Property Name="Действующая_Скидка" Type="int" />
+    <Property Name="Кол-во_На_Складе" Type="int" />
+    <Property Name="Описание_Товара" Type="nvarchar(max)" />
+    <Property Name="Фото" Type="nvarchar" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="ID_Роли" />
+    </Key>
+    <Property Name="ID_Роли" Type="int" Nullable="false" />
+    <Property Name="Наименование_Роли" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Statuses">
+    <Key>
+      <PropertyRef Name="IdStatus" />
+    </Key>
+    <Property Name="IdStatus" Type="int" Nullable="false" />
+    <Property Name="Наименование_Статуса" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Suppliers">
+    <Key>
+      <PropertyRef Name="Id_Поставщика" />
+    </Key>
+    <Property Name="Id_Поставщика" Type="int" Nullable="false" />
+    <Property Name="Наименование_Поставщика" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="IdUser" />
+    </Key>
+    <Property Name="IdUser" Type="int" Nullable="false" />
+    <Property Name="Id_Роли" Type="int" />
+    <Property Name="ФИО" Type="nvarchar" MaxLength="255" />
+    <Property Name="Логин" Type="nvarchar" MaxLength="255" />
+    <Property Name="Пароль" Type="nvarchar" MaxLength="255" />
+  </EntityType>
+  <Association Name="FK_OrderItems_Orders">
+    <End Role="Orders" Type="Self.Orders" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="OrderItems" Type="Self.OrderItems" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Orders">
+        <PropertyRef Name="Номер_Заказа" />
+      </Principal>
+      <Dependent Role="OrderItems">
+        <PropertyRef Name="Номер_Заказа" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrderItems_Products">
+    <End Role="Products" Type="Self.Products" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="OrderItems" Type="Self.OrderItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="Артикул" />
+      </Principal>
+      <Dependent Role="OrderItems">
+        <PropertyRef Name="Артикул" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orders_PickupPoints">
+    <End Role="PickupPoints" Type="Self.PickupPoints" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PickupPoints">
+        <PropertyRef Name="Id_Пункта" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="Адрес_Пункта_Выдачи" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orders_Statuses">
+    <End Role="Statuses" Type="Self.Statuses" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Statuses">
+        <PropertyRef Name="IdStatus" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="IdStatus" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orders_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="IdUser" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="IdUser" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_Role">
+    <End Role="Role" Type="Self.Role" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Users" Type="Self.Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="ID_Роли" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="Id_Роли" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Хранилище ShoeStore_BondarevModelContainer">
+    <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Manufacturers" EntityType="Self.Manufacturers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="OrderItems" EntityType="Self.OrderItems" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PickupPoints" EntityType="Self.PickupPoints" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Statuses" EntityType="Self.Statuses" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Suppliers" EntityType="Self.Suppliers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_OrderItems_Orders" Association="Self.FK_OrderItems_Orders">
+      <End Role="Orders" EntitySet="Orders" />
+      <End Role="OrderItems" EntitySet="OrderItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrderItems_Products" Association="Self.FK_OrderItems_Products">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="OrderItems" EntitySet="OrderItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orders_PickupPoints" Association="Self.FK_Orders_PickupPoints">
+      <End Role="PickupPoints" EntitySet="PickupPoints" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orders_Statuses" Association="Self.FK_Orders_Statuses">
+      <End Role="Statuses" EntitySet="Statuses" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orders_Users" Association="Self.FK_Orders_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_Role" Association="Self.FK_Users_Role">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
